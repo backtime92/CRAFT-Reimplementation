@@ -1,0 +1,5 @@
+.idea/
+data/test/icdar2013/*.jpg
+data/test/icdar2015/*.jpg
+pretrain/*.pth
+__pycache__
