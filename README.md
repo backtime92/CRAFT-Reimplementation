@@ -16,3 +16,8 @@ Install Requirements:
 
 Training
 This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.
+
+|dataset      |Recall      |precision      |H-mean    |
+|Syndata      |71.93%      |81.31%         |76.33     |
+
+
