@@ -23,8 +23,11 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 ## Training 
 
-If you want to train for weak supervised. You should first download the pre_trained model trained in the Syndata [baidu]((https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg))[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).Then change the data path and pre-trained model path.At last run `python train.py`
-
+If you want to train for weak supervised:                                                                                                                 						    
+1、You should first download the pre_trained model trained in the Syndata [baidu](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg)||[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).
+2、change the data path and pre-trained model path.
+3、run `python train.py`
+`Note:I will give the clear instruction for training the Syndata,IC15 and IC15+IC17 tomorrow`
                                                                                                                     
 **This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.**
 
