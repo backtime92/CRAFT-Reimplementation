@@ -21,7 +21,11 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
  Syndata+IC13+IC17:[Syndata+IC13+IC17 for baidu drive](https://pan.baidu.com/s/1L10JxOubAsW9CTO7xX4tlg)||      [Syndata+IC13+IC17 for google drive](https://drive.google.com/open?id=126743KYjbaUwZVWdgKhHiU61tR_7CpgC)   `(Note: the pre-trained model for 89.79% not 90.85%. I will upload it for 2 days later)`
 
 
-## Training                                                                                                                     
+## Training 
+
+If you want to train for weak supervised. You should first download the pre_trained model trained in the Syndata [baidu]((https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg))[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).Then change the data path and pre-trained model path.At last run `python train.py`
+
+                                                                                                                    
 **This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.**
 
 Methods                    |dataset      |Recall      |precision      |H-mean
