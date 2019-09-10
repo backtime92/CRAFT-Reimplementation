@@ -72,5 +72,7 @@ Syndata+IC13+IC17(deteval) |ICDAR13      |86.81%      |95.28%         |90.85%
 # Acknowledgement
 Thanks for Youngmin Baek, Bado Lee, Dongyoon Han, Sangdoo Yun, Hwalsuk Lee excellent work and [code](https://github.com/clovaai/CRAFT-pytorch) for test. In this repo, we use the author repo's basenet and test code.
 
+# License
+For commercial use, please contact the authors.
 
 
