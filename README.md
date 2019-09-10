@@ -18,7 +18,7 @@ The full paper is available at: https://arxiv.org/pdf/1904.01941.pdf
 Syndata:[Syndata for baidu drive](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg) ||     [Syndata for google drive](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing)                                                                                                    
 Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXVkZ_aytsYSiQ) ||      [Syndata+IC15 for google
  drive](https://drive.google.com/file/d/1k17GuBG_omT91tJoIMSlLrorYbLXkq4z/view?usp=sharing)                                   
- Syndata+IC13+IC17:[Syndata+IC13+IC17 for baidu drive](https://pan.baidu.com/s/1L10JxOubAsW9CTO7xX4tlg)||      [Syndata+IC13+IC17 for google drive](https://drive.google.com/open?id=126743KYjbaUwZVWdgKhHiU61tR_7CpgC)   `(Note: the pre-trained model for 89.79% not 90.85%. I will upload it for 2 days later)`
+ Syndata+IC13+IC17:[Syndata+IC13+IC17 for baidu drive](https://pan.baidu.com/s/1PTTzbM9XG0pNe5i-uL6Aag)||      [Syndata+IC13+IC17 for google drive](https://drive.google.com/open?id=1SkJEfaGYIq-eFxfzFVZb-cGdGWR8lPSi) 
 
 
 ## Training 
@@ -26,7 +26,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 ### Train for Syndata
 - download the Syndata(I will give the link)
 - change the path in basernet/vgg16_bn.py file:
->` (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu]()||[google]()                                                                 
+>` (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)                                                                 
 - change the path in trainSyndata.py file:
 > `(1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText 2、/data/CRAFT-pytorch/synweights/synweights -> /your_path/real_weights)`                                                                      
 - Run **`python trainSyndata.py`**
@@ -34,7 +34,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 ### Train for IC15 data based on Syndata pre-trained model
 - download the IC15 data, rename the image file and the gt file for  ch4_training_images and ch4_training_localization_transcription_gt,respectively.
 - change the path in basernet/vgg16_bn.py file:                                                                                                                                                              
-> `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu]()||[google]()
+> `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)
 - change the path in trainic15data.py file:                                                                                                                                                                  
 >` (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/data/CRAFT-pytorch/real_weights -> /your_path/real_weights)`
 - change the path in trainic15data.py file:                                                                                                                                                                 
@@ -47,8 +47,8 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 ### If you want to train for weak supervised use our Syndate pre-trained model:                                                                                                                                
 1、You should first download the pre_trained model trained in the Syndata [baidu](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg)||[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).                                                                                                                                                      
 2、change the data path and pre-trained model path.                                                                                                                                                         
-3、run `python train.py`                                                                                                                                                                                    
-`Note:I will give the clear instruction for training the Syndata,IC15 and IC15+IC17 tomorrow`
+3、run `python trainic15data.py`                                                                                                                                                                           
+
                                                                                                                     
 **This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.**
 
