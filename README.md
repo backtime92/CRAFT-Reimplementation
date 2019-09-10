@@ -23,7 +23,20 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 ## Training 
 
-If you want to train for weak supervised:                                                                                                                 						    
+### Train for Syndata
+- download the Syndata(I will give the link)
+- change the path in basernet/vgg16_bn.py file (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()
+- change the path in trainSyndata.py file (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/your_path/real_weights)
+- Run **`python trainSyndata.py`**
+
+### Train for IC15 based on Syndata pre-trained model
+- download the IC15 data, rename the image file and the gt file for  ch4_training_images and ch4_training_localization_transcription_gt,respectively.
+- change the path in basernet/vgg16_bn.py file (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()
+- change the path in trainic15data.py file (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/your_path/real_weights)
+- change the path in trainic15data.py file (1、/data/CRAFT-pytorch/1-7.pth -> /your_path/your_pre-trained_model_name 2、/data/CRAFT-pytorch/icdar1317 -> /your_ic15data_path/)
+- Run **`python trainic15data`**
+
+If you want to train for weak supervised use our Syndate pre-trained model:                                                                                                                                
 1、You should first download the pre_trained model trained in the Syndata [baidu](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg)||[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).                                                                                                                                                      
 2、change the data path and pre-trained model path.                                                                                                                                                         
 3、run `python train.py`                                                                                                                                                                                    
@@ -47,6 +60,9 @@ Syndata+IC13+IC17(deteval) |ICDAR13      |86.81%      |95.28%         |90.85%
 
 # Contributing to the project
 `We will release training code as soon as possible， and we have not yet reached the results given in the author's paper. Any pull requests or issues are welcome. We also hope that you could give us some advice for the project.`
+
+# Acknowledgement
+Thanks for Youngmin Baek, Bado Lee, Dongyoon Han, Sangdoo Yun, Hwalsuk Lee excellent work and [code](https://github.com/clovaai/CRAFT-pytorch) for test. In this repo, we use the author repo's basenet and test code.
 
 
 
