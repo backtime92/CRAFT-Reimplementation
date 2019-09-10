@@ -9,17 +9,18 @@ class Maploss(nn.Module):
         super(Maploss,self).__init__()
 
     def single_image_loss(self, pre_loss, loss_label):
+        batch_size = pre_loss.shape[0]
         sum_loss = torch.mean(pre_loss.view(-1))*0
-        pre_loss = pre_loss.view(12, -1)
-        loss_label = loss_label.view(12, -1)
-        internel = 12
-        for i in range(12):
+        pre_loss = pre_loss.view(batch_size, -1)
+        loss_label = loss_label.view(batch_size, -1)
+        internel = batch_size
+        for i in range(batch_size):
             average_number = 0
             loss = torch.mean(pre_loss.view(-1)) * 0
-            positive_pixel = len(pre_loss[i][(loss_label[i] > 0.1)])
+            positive_pixel = len(pre_loss[i][(loss_label[i] >= 0.1)])
             average_number += positive_pixel
             if positive_pixel != 0:
-                posi_loss = torch.mean(pre_loss[i][(loss_label[i] > 0.1)])
+                posi_loss = torch.mean(pre_loss[i][(loss_label[i] >= 0.1)])
                 sum_loss += posi_loss
                 if len(pre_loss[i][(loss_label[i] < 0.1)]) < 3*positive_pixel:
                     nega_loss = torch.mean(pre_loss[i][(loss_label[i] < 0.1)])
@@ -53,4 +54,4 @@ class Maploss(nn.Module):
 
         char_loss = self.single_image_loss(loss_g, gh_label)
         affi_loss = self.single_image_loss(loss_a, gah_label)
-        return char_loss/12 + affi_loss/12
+        return char_loss/loss_g.shape[0] + affi_loss/loss_a.shape[0]
