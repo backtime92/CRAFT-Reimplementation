@@ -25,18 +25,26 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 ### Train for Syndata
 - download the Syndata(I will give the link)
-- change the path in basernet/vgg16_bn.py file (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()
-- change the path in trainSyndata.py file (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/your_path/real_weights)
+- change the path in basernet/vgg16_bn.py file:
+>` (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()`                                                                 
+- change the path in trainSyndata.py file:
+> `(1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText 2、/data/CRAFT-pytorch/synweights/synweights -> /your_path/real_weights)`                                                                      
 - Run **`python trainSyndata.py`**
 
-### Train for IC15 based on Syndata pre-trained model
+### Train for IC15 data based on Syndata pre-trained model
 - download the IC15 data, rename the image file and the gt file for  ch4_training_images and ch4_training_localization_transcription_gt,respectively.
-- change the path in basernet/vgg16_bn.py file (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()
-- change the path in trainic15data.py file (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/your_path/real_weights)
-- change the path in trainic15data.py file (1、/data/CRAFT-pytorch/1-7.pth -> /your_path/your_pre-trained_model_name 2、/data/CRAFT-pytorch/icdar1317 -> /your_ic15data_path/)
-- Run **`python trainic15data`**
+- change the path in basernet/vgg16_bn.py file:                                                                                                                                                              
+> `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.[baidu]()||[google]()`
+- change the path in trainic15data.py file:                                                                                                                                                                  
+>` (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/data/CRAFT-pytorch/real_weights -> /your_path/real_weights)`
+- change the path in trainic15data.py file:                                                                                                                                                                 
+> `(1、/data/CRAFT-pytorch/1-7.pth -> /your_path/your_pre-trained_model_name 2、/data/CRAFT-pytorch/icdar1317 -> /your_ic15data_path/)`
+- Run **`python trainic15data.py`**
 
-If you want to train for weak supervised use our Syndate pre-trained model:                                                                                                                                
+### Train for IC13+17 data based on Syndata pre-trained model
+- **`coming soon`**
+
+###If you want to train for weak supervised use our Syndate pre-trained model:                                                                                                                                
 1、You should first download the pre_trained model trained in the Syndata [baidu](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg)||[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).                                                                                                                                                      
 2、change the data path and pre-trained model path.                                                                                                                                                         
 3、run `python train.py`                                                                                                                                                                                    
