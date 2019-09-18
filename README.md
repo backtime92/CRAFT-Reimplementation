@@ -65,9 +65,9 @@ Sample:
 ## Bad detection samples
 **`We have solved the problem about detecting big word. Now we are training the model. We will release the new code and result as soon as possible. And any issues or advice are welcome.`**
 
-`Old`                              
-<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_affinity.jpg" width="384" height="256" /> 
-`New`
+### `Old`                              
+<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_affinity.jpg" width="384" height="256" />                                                                                                                                                 
+### `New`
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_affinity.jpg" width="384" height="256" />
 
 
