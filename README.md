@@ -52,17 +52,19 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
                                                                                                                     
 **This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.**
 
-Methods                    |dataset      |Recall      |precision      |H-mean
----------------------------|-------------|------------|---------------|------
-Syndata                    |ICDAR13      |71.93%      |81.31%         |76.33%                                                                          
-Syndata+IC15               |ICDAR15      |76.12%      |84.55%         |80.11%      
-Syndata+IC13+IC17(deteval) |ICDAR13      |86.81%      |95.28%         |90.85%                                                 
-                                                                                                                                          
-                                                                                                                                                                                      
+Methods                                  |dataset      |Recall      |precision      |H-mean
+-----------------------------------------|-------------|------------|---------------|------
+Syndata                                  |ICDAR13      |71.93%      |81.31%         |76.33%                                                                          
+Syndata+IC15                             |ICDAR15      |76.12%      |84.55%         |80.11%               
+Syndata+IC13+IC17(deteval)               |ICDAR13      |86.81%      |95.28%         |90.85%                                   
+Syndata+IC15(new gaussian map method)    |ICDAR15      |77.76%      |83.38%         |80.47%(training and improving)                                   
+**`Note:new gaussian map method can split the inference gaussian region score map`**                                                                                                                         
+Sample:
+<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="384" height="256" />                                                                                                                                                      
 ## Bad detection samples
-**`There are our detection results with bad samples. We found that it's so terrible for detecting the big word. And the gaussian map can not split the character level gaussian region score map. We are trying to solve it, and any issues or advice are welcome.`**
+**`There are our detection results with bad samples. We found that the gaussian map can not split the character level gaussian region score map. We are trying to solve it, and any issues or advice are welcome.`**
 
-<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test1_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test1_affinity.jpg" width="384" height="256" />                                 
+                                
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_affinity.jpg" width="384" height="256" /> 
 
 
