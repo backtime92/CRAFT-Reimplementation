@@ -63,7 +63,7 @@ Syndata+IC15(new gaussian map method)    |ICDAR15      |77.76%      |83.38%     
 Sample:
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="384" height="256" />                                                                                                                                                      
 ## Bad detection samples
-**`There are our detection results with bad samples. We found that the gaussian map can not split the character level gaussian region score map. We are trying to solve it, and any issues or advice are welcome.`**
+**`There are our detection results with bad samples. We found that the model can not detection big word well. We are trying to solve it, and any issues or advice are welcome.`**
 
                                 
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_affinity.jpg" width="384" height="256" /> 
