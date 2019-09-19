@@ -60,7 +60,7 @@ Syndata+IC13+IC17(deteval)               |ICDAR13      |86.81%      |95.28%     
 Syndata+IC15(new gaussian map method)    |ICDAR15      |77.76%      |83.38%         |80.47%(training and improving)
 
 **`Note:new gaussian map method can split the inference gaussian region score map`**                                                                                                                         
-Sample:
+Sample:                                                                                           
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="384" height="256" />                                                                                                                                                      
 
 **`Note:We have solved the problem about detecting big word. Now we are training the model. We will release the new code and result as soon as possible. And any issues or advice are welcome.`**
