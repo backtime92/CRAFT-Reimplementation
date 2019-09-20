@@ -57,7 +57,7 @@ Methods                                  |dataset      |Recall      |precision  
 Syndata                                  |ICDAR13      |71.93%      |81.31%         |76.33%                                                                          
 Syndata+IC15                             |ICDAR15      |76.12%      |84.55%         |80.11%               
 Syndata+IC13+IC17(deteval)               |ICDAR13      |86.81%      |95.28%         |90.85%                                   
-Syndata+IC15(new gaussian map method)    |ICDAR15      |78.53%      |83.04%         |80.47%(training and improving)
+Syndata+IC15(new gaussian map method)    |ICDAR15      |78.53%      |83.04%         |80.72%(training and improving)
 
 **`Note:new gaussian map method can split the inference gaussian region score map`**                                                                                                                         
 Sample:                                                                                           
