@@ -59,15 +59,14 @@ Syndata+IC15                             |ICDAR15      |76.12%      |84.55%     
 Syndata+IC13+IC17(deteval)               |ICDAR13      |86.81%      |95.28%         |90.85%                                   
 Syndata+IC15(new gaussian map method)    |ICDAR15      |78.53%      |83.04%         |80.72%(training and improving)
 
+### We have released the latest code with new gaussian map and random crop algorithm. 
 **`Note:new gaussian map method can split the inference gaussian region score map`**                                                                                                                         
-Sample:                                                                                           
+`Sample:`                                                                                           
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="384" height="256" />                                                                                                                                                      
 
-**`Note:We have solved the problem about detecting big word. Now we are training the model. We will release the new code and result as soon as possible. And any issues or advice are welcome.`**
-
-### `Old`                              
-<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test2_affinity.jpg" width="384" height="256" />                                                                                                                                                 
-### `New`
+**`Note:We have solved the problem about detecting big word. Now we are training the model. And any issues or advice are welcome.`**                                                                  
+                                                                                                                                                 
+`Sample:`
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_affinity.jpg" width="384" height="256" />
 
 
