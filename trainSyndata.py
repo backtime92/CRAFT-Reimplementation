@@ -166,7 +166,7 @@ if __name__ == '__main__':
         #     adjust_learning_rate(optimizer, args.gamma, step_index)
 
         st = time.time()
-        for index, (images, gh_label, gah_label, mask) in enumerate(train_loader):
+        for index, (images, gh_label, gah_label, mask, _) in enumerate(train_loader):
             if index % 20000 == 0 and index != 0:
                 step_index += 1
                 adjust_learning_rate(optimizer, args.gamma, step_index)

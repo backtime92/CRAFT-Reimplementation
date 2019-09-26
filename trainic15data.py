@@ -151,9 +151,9 @@ if __name__ == '__main__':
             adjust_learning_rate(optimizer, args.gamma, step_index)
 
         st = time.time()
-        for index, (real_images, real_gh_label, real_gah_label, real_mask) in enumerate(real_data_loader):
+        for index, (real_images, real_gh_label, real_gah_label, real_mask, _) in enumerate(real_data_loader):
             #real_images, real_gh_label, real_gah_label, real_mask = next(batch_real)
-            syn_images, syn_gh_label, syn_gah_label, syn_mask = next(batch_syn)
+            syn_images, syn_gh_label, syn_gah_label, syn_mask, __ = next(batch_syn)
             images = torch.cat((syn_images,real_images), 0)
             gh_label = torch.cat((syn_gh_label, real_gh_label), 0)
             gah_label = torch.cat((syn_gah_label, real_gah_label), 0)
