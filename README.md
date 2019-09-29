@@ -14,6 +14,7 @@ The full paper is available at: https://arxiv.org/pdf/1904.01941.pdf
 4、check requiremtns.txt                                                                                                      
 5、4 nvidia GPUs(we use 4 nvidia titanX)                                                                                      
 
+`NOTE: There are old pre-trained models, I will upload the new results pre-trained models' link.
 ## pre-trained model:
 Syndata:[Syndata for baidu drive](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg) ||     [Syndata for google drive](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing)                                                                                                    
 Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXVkZ_aytsYSiQ) ||      [Syndata+IC15 for google
@@ -52,12 +53,13 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
                                                                                                                     
 **This code supprts for Syndata and icdar2015, and we will release the training code for IC13 and IC17 as soon as possible.**
 
-Methods                                  |dataset      |Recall      |precision      |H-mean
------------------------------------------|-------------|------------|---------------|------
-Syndata                                  |ICDAR13      |71.93%      |81.31%         |76.33%                                                                          
-Syndata+IC15                             |ICDAR15      |76.12%      |84.55%         |80.11%               
-Syndata+IC13+IC17(deteval)               |ICDAR13      |86.81%      |95.28%         |90.85%                                   
-Syndata+IC15(new gaussian map method)    |ICDAR15      |80.36%      |84.25%         |82.26%(training and improving)
+Methods                                       |dataset      |Recall      |precision      |H-mean
+----------------------------------------------|-------------|------------|---------------|------
+Syndata                                       |ICDAR13      |71.93%      |81.31%         |76.33%                                                                          
+Syndata+IC15                                  |ICDAR15      |76.12%      |84.55%         |80.11%               
+Syndata+MLT(deteval)                          |ICDAR13      |86.81%      |95.28%         |90.85%                                   
+Syndata+MLT(deteval)(new gaussian map method) |ICDAR13      |90.67%      |94.56%         |92.57%                                   
+Syndata+IC15(new gaussian map method)         |ICDAR15      |80.36%      |84.25%         |82.26%
 
 ### We have released the latest code with new gaussian map and random crop algorithm. 
 **`Note:new gaussian map method can split the inference gaussian region score map`**                                                                                                                         

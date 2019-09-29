@@ -89,6 +89,7 @@ def random_crop(imgs, img_size, character_bboxes):
                 [[bboxes[:, :, 0].min(), bboxes[:, :, 1].min()], [bboxes[:, :, 0].max(), bboxes[:, :, 1].max()]])
     word_bboxes = np.array(word_bboxes, np.int32)
 
+    #### IC15 for 0.6, MLT for 0.35 #####
     if random.random() > 0.6 and len(word_bboxes) > 0:
         sample_bboxes = word_bboxes[random.randint(0, len(word_bboxes) - 1)]
         left = max(sample_bboxes[1, 0] - img_size[0], 0)
@@ -104,8 +105,13 @@ def random_crop(imgs, img_size, character_bboxes):
         crop_h = sample_bboxes[1, 1] if th < sample_bboxes[1, 1] - i else th
         crop_w = sample_bboxes[1, 0] if tw < sample_bboxes[1, 0] - j else tw
     else:
-        i = random.randint(0, h - th)
-        j = random.randint(0, w - tw)
+        ### train for IC15 dataset####
+        # i = random.randint(0, h - th)
+        # j = random.randint(0, w - tw)
+
+        #### train for MLT dataset ###
+        i, j = 0, 0
+        crop_h, crop_w = h + 1, w + 1  # make the crop_h, crop_w > tw, th
 
     for idx in range(len(imgs)):
         # crop_h = sample_bboxes[1, 1] if th < sample_bboxes[1, 1] else th
@@ -406,6 +412,113 @@ class Synth80k(craft_base_dataset):
             confidences.append(1.0)
 
         return image, character_bboxes, words, np.ones((image.shape[0], image.shape[1]), np.float32), confidences
+
+
+class ICDAR2013(craft_base_dataset):
+    def __init__(self, net, icdar2013_folder, target_size=768, viz=False, debug=False):
+        super(ICDAR2013, self).__init__(target_size, viz, debug)
+        self.net = net
+        self.net.eval()
+        self.img_folder = os.path.join(icdar2013_folder, 'images/ch8_training_images')
+        self.gt_folder = os.path.join(icdar2013_folder, 'gt')
+        imagenames = os.listdir(self.img_folder)
+        self.images_path = []
+        for imagename in imagenames:
+            self.images_path.append(imagename)
+
+    def __getitem__(self, index):
+        return self.pull_item(index)
+
+    def __len__(self):
+        return len(self.images_path)
+
+    def get_imagename(self, index):
+        return self.images_path[index]
+
+    # def convert2013(self,box):
+    #     str = box[-1][1:-1]
+    #     bboxes = [box[0], box[1], box[2], box[1],
+    #               box[2], box[3], box[0], box[3],
+    #               str]
+    #     return bboxes
+
+    def load_image_gt_and_confidencemask(self, index):
+        '''
+        根据索引加载ground truth
+        :param index:索引
+        :return:bboxes 字符的框，
+        '''
+        imagename = self.images_path[index]
+        gt_path = os.path.join(self.gt_folder, "gt_%s.txt" % os.path.splitext(imagename)[0])
+        word_bboxes, words = self.load_gt(gt_path)
+        word_bboxes = np.float32(word_bboxes)
+
+        image_path = os.path.join(self.img_folder, imagename)
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        image = random_scale(image, word_bboxes, self.target_size)
+
+        confidence_mask = np.ones((image.shape[0], image.shape[1]), np.float32)
+
+        character_bboxes = []
+        new_words = []
+        confidences = []
+        if len(word_bboxes) > 0:
+            for i in range(len(word_bboxes)):
+                if words[i] == '###' or len(words[i].strip()) == 0:
+                    cv2.fillPoly(confidence_mask, [np.int32(word_bboxes[i])], (0))
+            for i in range(len(word_bboxes)):
+                if words[i] == '###' or len(words[i].strip()) == 0:
+                    continue
+                pursedo_bboxes, bbox_region_scores, confidence = self.inference_pursedo_bboxes(self.net, image,
+                                                                                               word_bboxes[i],
+                                                                                               words[i],
+                                                                                               gt_path,
+                                                                                               viz=self.viz)
+                confidences.append(confidence)
+                cv2.fillPoly(confidence_mask, [np.int32(word_bboxes[i])], (confidence))
+                new_words.append(words[i])
+                character_bboxes.append(pursedo_bboxes)
+        return image, character_bboxes, new_words, confidence_mask, confidences
+
+    def load_gt(self, gt_path):
+        lines = open(gt_path, encoding='utf-8').readlines()
+        bboxes = []
+        words = []
+        for line in lines:
+            ori_box = line.strip().encode('utf-8').decode('utf-8-sig').split(',')
+            box = [int(ori_box[j]) for j in range(8)]
+            word = ori_box[9:]
+            word = ','.join(word)
+            box = np.array(box, np.int32).reshape(4, 2)
+            if word == '###':
+                words.append('###')
+                bboxes.append(box)
+                continue
+            if len(word.strip()) == 0:
+                continue
+
+            try:
+                area, p0, p3, p2, p1, _, _ = mep(box)
+            except Exception as e:
+                print(e,gt_path)
+
+            bbox = np.array([p0, p1, p2, p3])
+            distance = 10000000
+            index = 0
+            for i in range(4):
+                d = np.linalg.norm(box[0] - bbox[i])
+                if distance > d:
+                    index = i
+                    distance = d
+            new_box = []
+            for i in range(index, index + 4):
+                new_box.append(bbox[i % 4])
+            new_box = np.array(new_box)
+            bboxes.append(np.array(new_box))
+            words.append(word)
+        return bboxes, words
 
 
 class ICDAR2015(craft_base_dataset):
