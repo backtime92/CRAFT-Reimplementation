@@ -14,8 +14,9 @@ The full paper is available at: https://arxiv.org/pdf/1904.01941.pdf
 4、check requiremtns.txt                                                                                                      
 5、4 nvidia GPUs(we use 4 nvidia titanX)                                                                                      
 
-`NOTE: There are old pre-trained models, I will upload the new results pre-trained models' link.
+
 ## pre-trained model:
+`NOTE: There are old pre-trained models, I will upload the new results pre-trained models' link.`                                                                                
 Syndata:[Syndata for baidu drive](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg) ||     [Syndata for google drive](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing)                                                                                                    
 Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXVkZ_aytsYSiQ) ||      [Syndata+IC15 for google
  drive](https://drive.google.com/file/d/1k17GuBG_omT91tJoIMSlLrorYbLXkq4z/view?usp=sharing)                                   
