@@ -23,6 +23,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 
 ## Training 
+`Note: When you train the IC15-Data or MLT-Data, please see the annotation in data_loader.py line 92 and line 108-112.`
 
 ### Train for Syndata
 - download the Syndata(I will give the link)
@@ -43,7 +44,15 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 - Run **`python trainic15data.py`**
 
 ### Train for IC13+17 data based on Syndata pre-trained model
-- **`coming soon`**
+
+- download the MLT data, rename the image file and the gt file,respectively.
+- change the path in basernet/vgg16_bn.py file:                                                                                                                                                              
+> `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)
+- change the path in trainic-MLT_data.py file:                                                                                                                                                              
+>` (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、savemodel path-> your savemodel path)`
+- change the path in trainic-MLT_data.py file:                                                                                                                                                         
+> `(1、/data/CRAFT-pytorch/1-7.pth -> /your_path/your_pre-trained_model_name 2、/data/CRAFT-pytorch/icdar1317 -> /your_ic15data_path/)`
+- Run **`python trainic-MLT_data.py`**
 
 ### If you want to train for weak supervised use our Syndate pre-trained model:                                                                                                                                
 1、You should first download the pre_trained model trained in the Syndata [baidu](https://pan.baidu.com/s/1MaznjE79JNS9Ld48ZtRefg)||[google](https://drive.google.com/file/d/1FvqfBMZQJeZXGfZLl-840YXoeYK8CNwk/view?usp=sharing).                                                                                                                                                      
