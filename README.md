@@ -84,7 +84,7 @@ Syndata+IC15(new gaussian map method)         |ICDAR15      |80.36%      |84.25%
 <img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_affinity.jpg" width="384" height="256" />                                                                                                                                    
 
 ###weChat QR code
-<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/wechatgroup.jpeg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="150" height="150" />                                                                                                                                     
+<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/wechatgroup.jpeg" width="150" height="150" />                                                           
 
 
 # Contributing to the project
