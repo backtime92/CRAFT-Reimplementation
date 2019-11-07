@@ -111,7 +111,7 @@ if __name__ == '__main__':
         pin_memory=True)
     batch_syn = iter(train_loader)
     
-    net = CRAFT(freeze = True)
+    net = CRAFT()
 
     net.load_state_dict(copyStateDict(torch.load('/data/CRAFT-pytorch/1-7.pth')))
     
@@ -121,6 +121,7 @@ if __name__ == '__main__':
 
     net = torch.nn.DataParallel(net,device_ids=[0,1,2,3]).cuda()
     cudnn.benchmark = True
+    net.train()
     realdata = ICDAR2015(net, '/data/CRAFT-pytorch/icdar2015', target_size=768)
     real_data_loader = torch.utils.data.DataLoader(
         realdata,
@@ -134,7 +135,7 @@ if __name__ == '__main__':
     optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     criterion = Maploss()
     #criterion = torch.nn.MSELoss(reduce=True, size_average=True)
-    net.train()
+    
 
 
     step_index = 0

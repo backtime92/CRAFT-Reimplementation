@@ -1,4 +1,6 @@
 # CRAFT-Reimplementation
+# Note：This is not the final version code. I am busy with other things now. I will refine the code and train again. Maybe I can finish this work at 11.20. Sorry for the faulty code. If you have any problems, please comment. Or you can join us weChat group. I will give the QR code.
+
 ## Reimplementation：Character Region Awareness for Text Detection Reimplementation based on Pytorch
 
 ## Character Region Awareness for Text Detection
@@ -79,7 +81,10 @@ Syndata+IC15(new gaussian map method)         |ICDAR15      |80.36%      |84.25%
 **`Note:We have solved the problem about detecting big word. Now we are training the model. And any issues or advice are welcome.`**                                                                  
                                                                                                                                                  
 `Sample:`
-<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_affinity.jpg" width="384" height="256" />
+<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_score.jpg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test4_affinity.jpg" width="384" height="256" />                                                                                                                                    
+
+###weChat QR code
+<img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/wechatgroup.jpeg" width="384" height="512" /><img src="https://github.com/backtime92/CRAFT-Reimplementation/blob/master/image/test3_affinity.jpg" width="150" height="150" />                                                                                                                                     
 
 
 # Contributing to the project

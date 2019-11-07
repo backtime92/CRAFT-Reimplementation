@@ -525,7 +525,7 @@ class ICDAR2015(craft_base_dataset):
     def __init__(self, net, icdar2015_folder, target_size=768, viz=False, debug=False):
         super(ICDAR2015, self).__init__(target_size, viz, debug)
         self.net = net
-        #self.net.eval()
+        self.net.eval()
         self.img_folder = os.path.join(icdar2015_folder, 'ch4_training_images')
         self.gt_folder = os.path.join(icdar2015_folder, 'ch4_training_localization_transcription_gt')
         imagenames = os.listdir(self.img_folder)
