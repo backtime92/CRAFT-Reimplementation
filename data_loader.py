@@ -252,13 +252,22 @@ class craft_base_dataset(data.Dataset):
             cv2.imshow("crop_image", viz_image)
             cv2.waitKey()
         bboxes /= scale
+        try:
+            for j in range(len(bboxes)):
+                ones = np.ones((4, 1))
+                tmp = np.concatenate([bboxes[j], ones], axis=-1)
+                I = np.matrix(MM).I
+                ori = np.matmul(I, tmp.transpose(1, 0)).transpose(1, 0)
+                bboxes[j] = ori[:, :2]
+        except Exception as e:
+            print(e, gt_path)
 
-        for j in range(len(bboxes)):
-            ones = np.ones((4, 1))
-            tmp = np.concatenate([bboxes[j], ones], axis=-1)
-            I = np.matrix(MM).I
-            ori = np.matmul(I, tmp.transpose(1, 0)).transpose(1, 0)
-            bboxes[j] = ori[:, :2]
+#         for j in range(len(bboxes)):
+#             ones = np.ones((4, 1))
+#             tmp = np.concatenate([bboxes[j], ones], axis=-1)
+#             I = np.matrix(MM).I
+#             ori = np.matmul(I, tmp.transpose(1, 0)).transpose(1, 0)
+#             bboxes[j] = ori[:, :2]
 
         bboxes[:, :, 1] = np.clip(bboxes[:, :, 1], 0., image.shape[0] - 1)
         bboxes[:, :, 0] = np.clip(bboxes[:, :, 0], 0., image.shape[1] - 1)
