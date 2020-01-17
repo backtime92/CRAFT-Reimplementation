@@ -13,7 +13,7 @@ The full paper is available at: https://arxiv.org/pdf/1904.01941.pdf
 1、PyTroch>=0.4.1                                                                                                                             
 2、torchvision>=0.2.1 			                                                    																			                             
 3、opencv-python>=3.4.2                                                                                                       
-4、check requiremtns.txt                                                                                                      
+4、check requirements.txt                                                                                                      
 5、4 nvidia GPUs(we use 4 nvidia titanX)                                                                                      
 
 
