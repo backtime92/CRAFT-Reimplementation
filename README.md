@@ -1,5 +1,5 @@
 # CRAFT-Reimplementation
-# Note： NEW CODE COMING SOON. Sorry for the faulty code. If you have any problems, please comment. Or you can join us weChat group. The QR code at the bottom of page.
+# Note：If you have any problems, please comment. Or you can join us weChat group. The QR code at the bottom of page.
 
 ## Reimplementation：Character Region Awareness for Text Detection Reimplementation based on Pytorch
 
