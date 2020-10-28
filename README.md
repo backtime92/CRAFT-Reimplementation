@@ -30,7 +30,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 ### Train for Syndata
 - download the Syndata(I will give the link)
-- change the path in basernet/vgg16_bn.py file:
+- change the path in basenet/vgg16_bn.py file:
 >` (/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)                                                                 
 - change the path in trainSyndata.py file:
 > `(1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText 2、/data/CRAFT-pytorch/synweights/synweights -> /your_path/real_weights)`                                                                      
@@ -38,7 +38,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 
 ### Train for IC15 data based on Syndata pre-trained model
 - download the IC15 data, rename the image file and the gt file for  ch4_training_images and ch4_training_localization_transcription_gt,respectively.
-- change the path in basernet/vgg16_bn.py file:                                                                                                                                                              
+- change the path in basenet/vgg16_bn.py file:                                                                                                                                                              
 > `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)
 - change the path in trainic15data.py file:                                                                                                                                                                  
 >` (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、/data/CRAFT-pytorch/real_weights -> /your_path/real_weights)`
@@ -49,7 +49,7 @@ Syndata+IC15:[Syndata+IC15 for baidu drive](https://pan.baidu.com/s/19lJRM6YWZXV
 ### Train for IC13+17 data based on Syndata pre-trained model
 
 - download the MLT data, rename the image file and the gt file,respectively.
-- change the path in basernet/vgg16_bn.py file:                                                                                                                                                              
+- change the path in basenet/vgg16_bn.py file:                                                                                                                                                              
 > `(/data/CRAFT-pytorch/vgg16_bn-6c64b313.pth -> /your_path/vgg16_bn-6c64b313.pth).You can download the model here.`[baidu](https://pan.baidu.com/s/1_h5qdwYQAToDi_BB5Eg3vg)||[google](https://drive.google.com/open?id=1ZtvGpFQrbmEisB_GhmZb8UQOtvqY_-tW)
 - change the path in trainic-MLT_data.py file:                                                                                                                                                              
 >` (1、/data/CRAFT-pytorch/SynthText -> /your_path/SynthText    2、savemodel path-> your savemodel path)`
