@@ -11,7 +11,7 @@ from collections import OrderedDict
 import torch.nn.init as init
 from torchutil import *
 
-from basenet.vgg16_bn import vgg16_bn
+from basenet import vgg16_bn
 
 
 class double_conv(nn.Module):
@@ -36,9 +36,6 @@ class CRAFT(nn.Module):
         super(CRAFT, self).__init__()
 
         """ Base network """
-        # self.net = vgg16_bn(pretrained, freeze)
-        # self.net.load_state_dict(copyStateDict(torch.load('vgg16_bn-6c64b313.pth')))
-        # self.basenet = self.net
         self.basenet = vgg16_bn(pretrained, freeze)
         """ U network """
         self.upconv1 = double_conv(1024, 512, 256)
@@ -87,6 +84,6 @@ class CRAFT(nn.Module):
 
 
 if __name__ == '__main__':
-    model = CRAFT(pretrained=True).cuda()
-    output, _ = model(torch.randn(1, 3, 768, 768).cuda())
+    model = CRAFT(pretrained=True)
+    output, _ = model(torch.randn(1, 3, 768, 768))
     print(output.shape)
