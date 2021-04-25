@@ -25,9 +25,6 @@ def list_files(in_path):
                 gt_files.append(os.path.join(dirpath, file))
             elif ext == '.zip':
                 continue
-    # img_files.sort()
-    # mask_files.sort()
-    # gt_files.sort()
     return img_files, mask_files, gt_files
 
 def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=None):
@@ -56,27 +53,21 @@ def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=
             for i, box in enumerate(boxes):
                 poly = np.array(box).astype(np.int32).reshape((-1))
                 strResult = ','.join([str(p) for p in poly]) + '\r\n'
-                # poly = np.array(box).astype(np.int32)
-                # min_x = np.min(poly[:,0])
-                # max_x = np.max(poly[:,0])
-                # min_y = np.min(poly[:,1])
-                # max_y = np.max(poly[:,1])
-                # strResult = ','.join([str(min_x), str(min_y), str(max_x), str(max_y)]) + '\r\n'
                 f.write(strResult)
 
-        #         poly = poly.reshape(-1, 2)
-        #         cv2.polylines(img, [poly.reshape((-1, 1, 2))], True, color=(0, 0, 255), thickness=2)
-        #         ptColor = (0, 255, 255)
-        #         if verticals is not None:
-        #             if verticals[i]:
-        #                 ptColor = (255, 0, 0)
-        #
-        #         if texts is not None:
-        #             font = cv2.FONT_HERSHEY_SIMPLEX
-        #             font_scale = 0.5
-        #             cv2.putText(img, "{}".format(texts[i]), (poly[0][0]+1, poly[0][1]+1), font, font_scale, (0, 0, 0), thickness=1)
-        #             cv2.putText(img, "{}".format(texts[i]), tuple(poly[0]), font, font_scale, (0, 255, 255), thickness=1)
-        #
-        # #Save result image
-        # cv2.imwrite(res_img_file, img)
+                poly = poly.reshape(-1, 2)
+                cv2.polylines(img, [poly.reshape((-1, 1, 2))], True, color=(0, 0, 255), thickness=2)
+                ptColor = (0, 255, 255)
+                if verticals is not None:
+                    if verticals[i]:
+                        ptColor = (255, 0, 0)
+        
+                if texts is not None:
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    font_scale = 0.5
+                    cv2.putText(img, "{}".format(texts[i]), (poly[0][0]+1, poly[0][1]+1), font, font_scale, (0, 0, 0), thickness=1)
+                    cv2.putText(img, "{}".format(texts[i]), tuple(poly[0]), font, font_scale, (0, 255, 255), thickness=1)
+        
+        #Save result image
+        cv2.imwrite(res_img_file, img)
 
