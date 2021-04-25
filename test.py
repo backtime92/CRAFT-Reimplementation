@@ -43,11 +43,11 @@ def str2bool(v):
     return v.lower() in ("yes", "y", "true", "t", "1")
 
 parser = argparse.ArgumentParser(description='CRAFT Text Detection')
-parser.add_argument('--trained_model', default='weights/craft_mlt_25k.pth', type=str, help='pretrained model')
+parser.add_argument('--trained_model', default='IC15/IC15_pretrained_weights.pth', type=str, help='pretrained model')
 parser.add_argument('--text_threshold', default=0.7, type=float, help='text confidence threshold')
 parser.add_argument('--low_text', default=0.4, type=float, help='text low-bound score')
 parser.add_argument('--link_threshold', default=0.4, type=float, help='link confidence threshold')
-parser.add_argument('--cuda', default=True, type=str2bool, help='Use cuda to train model')
+parser.add_argument('--cuda', default=False, type=str2bool, help='Dont use cuda to train model')
 parser.add_argument('--canvas_size', default=2240, type=int, help='image size for inference')
 parser.add_argument('--mag_ratio', default=2, type=float, help='image magnification ratio')
 parser.add_argument('--poly', default=False, action='store_true', help='enable polygon type')
@@ -58,9 +58,9 @@ args = parser.parse_args()
 
 
 """ For test images in a folder """
-image_list, _, _ = file_utils.get_files('/data/CRAFT-pytorch/test')
+image_list, _, _ = file_utils.get_files(os.path.dirname(os.path.abspath(__file__)) + '/Test-Images')
 
-result_folder = '/data/CRAFT-pytorch/result/'
+result_folder = os.path.dirname(os.path.abspath(__file__)) + '/result'
 if not os.path.isdir(result_folder):
     os.mkdir(result_folder)
 
@@ -75,9 +75,6 @@ def test_net(net, image, text_threshold, link_threshold, low_text, cuda, poly):
     x = imgproc.normalizeMeanVariance(img_resized)
     x = torch.from_numpy(x).permute(2, 0, 1)    # [h, w, c] to [c, h, w]
     x = Variable(x.unsqueeze(0))                # [c, h, w] to [b, c, h, w]
-    if cuda:
-        x = x.cuda()
-
     # forward pass
     y, _ = net(x)
 
@@ -115,18 +112,8 @@ def test(modelpara):
     net = CRAFT()     # initialize
 
     print('Loading weights from checkpoint {}'.format(modelpara))
-    if args.cuda:
-        net.load_state_dict(copyStateDict(torch.load(modelpara)))
-    else:
-        net.load_state_dict(copyStateDict(torch.load(modelpara, map_location='cpu')))
-
-    if args.cuda:
-        net = net.cuda()
-        net = torch.nn.DataParallel(net)
-        cudnn.benchmark = False
-
+    net.load_state_dict(copyStateDict(torch.load(modelpara, map_location='cpu')))
     net.eval()
-
     t = time.time()
 
     # load data
@@ -138,7 +125,7 @@ def test(modelpara):
         # save score text
         filename, file_ext = os.path.splitext(os.path.basename(image_path))
         mask_file = result_folder + "/res_" + filename + '_mask.jpg'
-        #cv2.imwrite(mask_file, score_text)
+        cv2.imwrite(mask_file, score_text)
 
         file_utils.saveResult(image_path, image[:,:,::-1], polys, dirname=result_folder)
 
