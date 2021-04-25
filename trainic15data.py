@@ -9,31 +9,16 @@ import argparse
 import time
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.backends.cudnn as cudnn
 import torch.optim as optim
 import random
 import h5py
 import re
-import water
 from test import test
-
-
 from math import exp
 from data_loader import ICDAR2015, Synth80k, ICDAR2013
-
-###import file#######
-from augmentation import random_rot, crop_img_bboxes
-from gaussianmap import gaussion_transform, four_point_transform
-from generateheatmap import add_character, generate_target, add_affinity, generate_affinity, sort_box, real_affinity, generate_affinity_box
 from mseloss import Maploss
-
-
-
 from collections import OrderedDict
 from eval.script import getresult
-
-
-
 from PIL import Image
 from torchvision.transforms import transforms
 from craft import CRAFT
@@ -43,11 +28,6 @@ from multiprocessing import Pool
 #3.2768e-5
 random.seed(42)
 
-# class SynAnnotationTransform(object):
-#     def __init__(self):
-#         pass
-#     def __call__(self, gt):
-#         image_name = gt['imnames'][0]
 parser = argparse.ArgumentParser(description='CRAFT reimplementation')
 
 
@@ -71,11 +51,6 @@ parser.add_argument('--num_workers', default=32, type=int,
 
 args = parser.parse_args()
 
-
-
-
-
-
 def copyStateDict(state_dict):
     if list(state_dict.keys())[0].startswith("module"):
         start_idx = 1
@@ -98,10 +73,12 @@ def adjust_learning_rate(optimizer, gamma, step):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+synthtext_folder = os.path.dirname(os.path.abspath(__file__))+'/synthtext_folder'
+ic15_folder = os.path.dirname(os.path.abspath(__file__))+'/IC15'
 
 if __name__ == '__main__':
-
-    dataloader = Synth80k('/data/CRAFT-pytorch/syntext/SynthText/SynthText', target_size = 768)
+## train model on character level annotated dataset - Synthetic Dataset
+    dataloader = Synth80k(synthtext_folder, target_size = 768)
     train_loader = torch.utils.data.DataLoader(
         dataloader,
         batch_size=2,
@@ -110,19 +87,13 @@ if __name__ == '__main__':
         drop_last=True,
         pin_memory=True)
     batch_syn = iter(train_loader)
-    
+
     net = CRAFT()
-
-    net.load_state_dict(copyStateDict(torch.load('/data/CRAFT-pytorch/1-7.pth')))
-    
-    net = net.cuda()
-
-
-
-    net = torch.nn.DataParallel(net,device_ids=[0,1,2,3]).cuda()
-    cudnn.benchmark = True
+    net.load_state_dict(copyStateDict(torch.load(os.path.join(synthtext_folder, 'Syndata.pth'), map_location=torch.device('cpu'))))
     net.train()
-    realdata = ICDAR2015(net, '/data/CRAFT-pytorch/icdar2015', target_size=768)
+
+## pseudo ground truth generation from word annotated dataset
+    realdata = ICDAR2015(net, ic15_folder, target_size=768)
     real_data_loader = torch.utils.data.DataLoader(
         realdata,
         batch_size=10,
@@ -131,26 +102,20 @@ if __name__ == '__main__':
         drop_last=True,
         pin_memory=True)
 
-
     optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     criterion = Maploss()
-    #criterion = torch.nn.MSELoss(reduce=True, size_average=True)
-    
-
-
     step_index = 0
-
-
     loss_time = 0
     loss_value = 0
     compare_loss = 1
-    for epoch in range(1000):
+
+    ## train on both synthetic and pseudo ground truth dataset 
+    for epoch in range(10):
         train_time_st = time.time()
         loss_value = 0
-        if epoch % 50 == 0 and epoch != 0:
+        if epoch % 4 == 0 and epoch != 0:
             step_index += 1
             adjust_learning_rate(optimizer, args.gamma, step_index)
-
         st = time.time()
         for index, (real_images, real_gh_label, real_gah_label, real_mask, _) in enumerate(real_data_loader):
             #real_images, real_gh_label, real_gah_label, real_mask = next(batch_real)
@@ -162,24 +127,23 @@ if __name__ == '__main__':
             #affinity_mask = torch.cat((syn_mask, real_affinity_mask), 0)
 
 
-            images = Variable(images.type(torch.FloatTensor)).cuda()
+            images = Variable(images.type(torch.FloatTensor)) 
             gh_label = gh_label.type(torch.FloatTensor)
             gah_label = gah_label.type(torch.FloatTensor)
-            gh_label = Variable(gh_label).cuda()
-            gah_label = Variable(gah_label).cuda()
+            gh_label = Variable(gh_label) 
+            gah_label = Variable(gah_label) 
             mask = mask.type(torch.FloatTensor)
-            mask = Variable(mask).cuda()
+            mask = Variable(mask) 
             # affinity_mask = affinity_mask.type(torch.FloatTensor)
-            # affinity_mask = Variable(affinity_mask).cuda()
+            # affinity_mask = Variable(affinity_mask) 
 
             out, _ = net(images)
 
             optimizer.zero_grad()
 
-            out1 = out[:, :, :, 0].cuda()
-            out2 = out[:, :, :, 1].cuda()
+            out1 = out[:, :, :, 0] 
+            out2 = out[:, :, :, 1] 
             loss = criterion(gh_label, gah_label, out1, out2, mask)
-
             loss.backward()
             optimizer.step()
             loss_value += loss.item()
@@ -189,16 +153,10 @@ if __name__ == '__main__':
                 loss_time = 0
                 loss_value = 0
                 st = time.time()
-            # if loss < compare_loss:
-            #     print('save the lower loss iter, loss:',loss)
-            #     compare_loss = loss
-            #     torch.save(net.module.state_dict(),
-            #                '/data/CRAFT-pytorch/real_weights/lower_loss.pth')
-
         print('Saving state, iter:', epoch)
         torch.save(net.module.state_dict(),
-                   '/data/CRAFT-pytorch/real_weights/CRAFT_clr_' + repr(epoch) + '.pth')
-        test('/data/CRAFT-pytorch/real_weights/CRAFT_clr_' + repr(epoch) + '.pth')
+                   os.path.join(ic15_folder, 'IC15_pretrained_weights') + '.pth')
+        test(os.path.join(ic15_folder, 'IC15_pretrained_weights') + '.pth')
         #test('/data/CRAFT-pytorch/craft_mlt_25k.pth')
         getresult()
         
