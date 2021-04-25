@@ -1,10 +1,3 @@
-
-
-
-###for icdar2015####
-
-
-
 import torch
 import torch.utils.data as data
 import scipy.io as scio
@@ -20,7 +13,12 @@ import torchvision.transforms as transforms
 import craft_utils
 import Polygon as plg
 import time
+from craft import CRAFT
+from torchutil import copyStateDict
 
+
+''' Image preprocessing '''
+''' Utitlty Functions '''
 
 def ratio_area(h, w, box):
     area = h * w
@@ -44,10 +42,6 @@ def rescale_img(img, box, h, w):
 
 def random_scale(img, bboxes, min_size):
     h, w = img.shape[0:2]
-    # ratio, _ = ratio_area(h, w, bboxes)
-    # if ratio > 0.5:
-    #     image = rescale_img(img.copy(), bboxes, h, w)
-    #     return image
     scale = 1.0
     if max(h, w) > 1280:
         scale = 1280.0 / max(h, w)
@@ -106,17 +100,14 @@ def random_crop(imgs, img_size, character_bboxes):
         crop_w = sample_bboxes[1, 0] if tw < sample_bboxes[1, 0] - j else tw
     else:
         ### train for IC15 dataset####
-        # i = random.randint(0, h - th)
-        # j = random.randint(0, w - tw)
+        i = random.randint(0, h - th)
+        j = random.randint(0, w - tw)
 
         #### train for MLT dataset ###
-        i, j = 0, 0
-        crop_h, crop_w = h + 1, w + 1  # make the crop_h, crop_w > tw, th
+        # i, j = 0, 0
+        # crop_h, crop_w = h + 1, w + 1  # make the crop_h, crop_w > tw, th
 
     for idx in range(len(imgs)):
-        # crop_h = sample_bboxes[1, 1] if th < sample_bboxes[1, 1] else th
-        # crop_w = sample_bboxes[1, 0] if tw < sample_bboxes[1, 0] else tw
-
         if len(imgs[idx].shape) == 3:
             imgs[idx] = imgs[idx][i:i + crop_h, j:j + crop_w, :]
         else:
@@ -147,6 +138,11 @@ def random_rotate(imgs):
     return imgs
 
 
+''' Utitlity Functions End '''
+
+
+''' main class for score generation '''
+
 class craft_base_dataset(data.Dataset):
     def __init__(self, target_size=768, viz=False, debug=False):
         self.target_size = target_size
@@ -156,7 +152,7 @@ class craft_base_dataset(data.Dataset):
 
     def load_image_gt_and_confidencemask(self, index):
         '''
-        根据索引值返回图像、字符框、文字行内容、confidence mask
+        :confidence mask:
         :param index:
         :return:
         '''
@@ -197,7 +193,7 @@ class craft_base_dataset(data.Dataset):
         img_torch = torch.from_numpy(imgproc.normalizeMeanVariance(input, mean=(0.485, 0.456, 0.406),
                                                                    variance=(0.229, 0.224, 0.225)))
         img_torch = img_torch.permute(2, 0, 1).unsqueeze(0)
-        img_torch = img_torch.type(torch.FloatTensor).cuda()
+        img_torch = img_torch.type(torch.FloatTensor)
         scores, _ = net(img_torch)
         region_scores = scores[0, :, :, 0].cpu().data.numpy()
         region_scores = np.uint8(np.clip(region_scores, 0, 1) * 255)
@@ -260,18 +256,10 @@ class craft_base_dataset(data.Dataset):
                 ori = np.matmul(I, tmp.transpose(1, 0)).transpose(1, 0)
                 bboxes[j] = ori[:, :2]
         except Exception as e:
-            print(e, gt_path)
-
-#         for j in range(len(bboxes)):
-#             ones = np.ones((4, 1))
-#             tmp = np.concatenate([bboxes[j], ones], axis=-1)
-#             I = np.matrix(MM).I
-#             ori = np.matmul(I, tmp.transpose(1, 0)).transpose(1, 0)
-#             bboxes[j] = ori[:, :2]
+            print(e)
 
         bboxes[:, :, 1] = np.clip(bboxes[:, :, 1], 0., image.shape[0] - 1)
         bboxes[:, :, 0] = np.clip(bboxes[:, :, 0], 0., image.shape[1] - 1)
-
         return bboxes, region_scores, confidence
 
     def resizeGt(self, gtmask):
@@ -327,10 +315,6 @@ class craft_base_dataset(data.Dataset):
         cv2.imwrite(outpath, output)
 
     def pull_item(self, index):
-        # if self.get_imagename(index) == 'img_59.jpg':
-        #     pass
-        # else:
-        #     return [], [], [], [], np.array([0])
         image, character_bboxes, words, confidence_mask, confidences = self.load_image_gt_and_confidencemask(index)
         if len(confidences) == 0:
             confidences = 1.0
@@ -375,6 +359,11 @@ class craft_base_dataset(data.Dataset):
         return image, region_scores_torch, affinity_scores_torch, confidence_mask_torch, confidences
 
 
+
+''' Child Classes '''
+
+''' SYNTHETIC DATA '''
+
 class Synth80k(craft_base_dataset):
 
     def __init__(self, synthtext_folder, target_size=768, viz=False, debug=False):
@@ -396,9 +385,9 @@ class Synth80k(craft_base_dataset):
 
     def load_image_gt_and_confidencemask(self, index):
         '''
-        根据索引加载ground truth
-        :param index:索引
-        :return:bboxes 字符的框，
+        :ground truth:
+        :param index:
+        :return:bboxes
         '''
         img_path = os.path.join(self.synthtext_folder, self.image[index][0])
         image = cv2.imread(img_path, cv2.IMREAD_COLOR)
@@ -423,111 +412,8 @@ class Synth80k(craft_base_dataset):
         return image, character_bboxes, words, np.ones((image.shape[0], image.shape[1]), np.float32), confidences
 
 
-class ICDAR2013(craft_base_dataset):
-    def __init__(self, net, icdar2013_folder, target_size=768, viz=False, debug=False):
-        super(ICDAR2013, self).__init__(target_size, viz, debug)
-        self.net = net
-        self.net.eval()
-        self.img_folder = os.path.join(icdar2013_folder, 'images/ch8_training_images')
-        self.gt_folder = os.path.join(icdar2013_folder, 'gt')
-        imagenames = os.listdir(self.img_folder)
-        self.images_path = []
-        for imagename in imagenames:
-            self.images_path.append(imagename)
 
-    def __getitem__(self, index):
-        return self.pull_item(index)
-
-    def __len__(self):
-        return len(self.images_path)
-
-    def get_imagename(self, index):
-        return self.images_path[index]
-
-    # def convert2013(self,box):
-    #     str = box[-1][1:-1]
-    #     bboxes = [box[0], box[1], box[2], box[1],
-    #               box[2], box[3], box[0], box[3],
-    #               str]
-    #     return bboxes
-
-    def load_image_gt_and_confidencemask(self, index):
-        '''
-        根据索引加载ground truth
-        :param index:索引
-        :return:bboxes 字符的框，
-        '''
-        imagename = self.images_path[index]
-        gt_path = os.path.join(self.gt_folder, "gt_%s.txt" % os.path.splitext(imagename)[0])
-        word_bboxes, words = self.load_gt(gt_path)
-        word_bboxes = np.float32(word_bboxes)
-
-        image_path = os.path.join(self.img_folder, imagename)
-        image = cv2.imread(image_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-        image = random_scale(image, word_bboxes, self.target_size)
-
-        confidence_mask = np.ones((image.shape[0], image.shape[1]), np.float32)
-
-        character_bboxes = []
-        new_words = []
-        confidences = []
-        if len(word_bboxes) > 0:
-            for i in range(len(word_bboxes)):
-                if words[i] == '###' or len(words[i].strip()) == 0:
-                    cv2.fillPoly(confidence_mask, [np.int32(word_bboxes[i])], (0))
-            for i in range(len(word_bboxes)):
-                if words[i] == '###' or len(words[i].strip()) == 0:
-                    continue
-                pursedo_bboxes, bbox_region_scores, confidence = self.inference_pursedo_bboxes(self.net, image,
-                                                                                               word_bboxes[i],
-                                                                                               words[i],
-                                                                                               gt_path,
-                                                                                               viz=self.viz)
-                confidences.append(confidence)
-                cv2.fillPoly(confidence_mask, [np.int32(word_bboxes[i])], (confidence))
-                new_words.append(words[i])
-                character_bboxes.append(pursedo_bboxes)
-        return image, character_bboxes, new_words, confidence_mask, confidences
-
-    def load_gt(self, gt_path):
-        lines = open(gt_path, encoding='utf-8').readlines()
-        bboxes = []
-        words = []
-        for line in lines:
-            ori_box = line.strip().encode('utf-8').decode('utf-8-sig').split(',')
-            box = [int(ori_box[j]) for j in range(8)]
-            word = ori_box[9:]
-            word = ','.join(word)
-            box = np.array(box, np.int32).reshape(4, 2)
-            if word == '###':
-                words.append('###')
-                bboxes.append(box)
-                continue
-            if len(word.strip()) == 0:
-                continue
-
-            try:
-                area, p0, p3, p2, p1, _, _ = mep(box)
-            except Exception as e:
-                print(e,gt_path)
-
-            bbox = np.array([p0, p1, p2, p3])
-            distance = 10000000
-            index = 0
-            for i in range(4):
-                d = np.linalg.norm(box[0] - bbox[i])
-                if distance > d:
-                    index = i
-                    distance = d
-            new_box = []
-            for i in range(index, index + 4):
-                new_box.append(bbox[i % 4])
-            new_box = np.array(new_box)
-            bboxes.append(np.array(new_box))
-            words.append(word)
-        return bboxes, words
+''' IC15 DATASET '''
 
 
 class ICDAR2015(craft_base_dataset):
@@ -553,9 +439,9 @@ class ICDAR2015(craft_base_dataset):
 
     def load_image_gt_and_confidencemask(self, index):
         '''
-        根据索引加载ground truth
-        :param index:索引
-        :return:bboxes 字符的框，
+        :ground truth:
+        :param index:
+        :return:bboxes，
         '''
         imagename = self.images_path[index]
         gt_path = os.path.join(self.gt_folder, "gt_%s.txt" % os.path.splitext(imagename)[0])
@@ -623,27 +509,16 @@ class ICDAR2015(craft_base_dataset):
         return bboxes, words
 
 
+
+
 if __name__ == '__main__':
-    # synthtextloader = Synth80k('/home/jiachx/publicdatasets/SynthText/SynthText', target_size=768, viz=True, debug=True)
-    # train_loader = torch.utils.data.DataLoader(
-    #     synthtextloader,
-    #     batch_size=1,
-    #     shuffle=False,
-    #     num_workers=0,
-    #     drop_last=True,
-    #     pin_memory=True)
-    # train_batch = iter(train_loader)
-    # image_origin, target_gaussian_heatmap, target_gaussian_affinity_heatmap, mask = next(train_batch)
-    from craft import CRAFT
-    from torchutil import copyStateDict
 
     net = CRAFT(freeze=True)
     net.load_state_dict(
-        copyStateDict(torch.load('/data/CRAFT-pytorch/1-7.pth')))
-    net = net.cuda()
+        copyStateDict(torch.load('IC15/IC15.pth',map_location=torch.device('cpu'))))
     net = torch.nn.DataParallel(net)
     net.eval()
-    dataloader = ICDAR2015(net, '/data/CRAFT-pytorch/icdar2015', target_size=768, viz=True)
+    dataloader = ICDAR2015(net, 'IC15', target_size=768, viz=True)
     train_loader = torch.utils.data.DataLoader(
         dataloader,
         batch_size=1,
@@ -653,11 +528,26 @@ if __name__ == '__main__':
         pin_memory=True)
     total = 0
     total_sum = 0
+   
     for index, (opimage, region_scores, affinity_scores, confidence_mask, confidences_mean) in enumerate(train_loader):
         total += 1
-        # confidence_mean = confidences_mean.mean()
-        # total_sum += confidence_mean
-        # print(index, confidence_mean)
+        confidence_mean = confidences_mean.mean()
+        total_sum += confidence_mean
+        print(index, confidence_mean)
+    
     print("mean=", total_sum / total)
 
+
+
+
+# synthtextloader = Synth80k('FILE_PATH', target_size=768, viz=True, debug=True)
+# train_loader = torch.utils.data.DataLoader(
+#     synthtextloader,
+#     batch_size=1,
+#     shuffle=False,
+#     num_workers=0,
+#     drop_last=True,
+#     pin_memory=True)
+# train_batch = iter(train_loader)
+# image_origin, target_gaussian_heatmap, target_gaussian_affinity_heatmap, mask = next(train_batch)
 
