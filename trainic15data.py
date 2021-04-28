@@ -73,6 +73,10 @@ def adjust_learning_rate(optimizer, gamma, step):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+## make folder 'synthtext_folder' in project directory and add 'Syndata.pth' and SythText dataset from https://www.robots.ox.ac.uk/~vgg/data/scenetext/
+## make folder '/IC15' in project directory and add 'IC15.pth' and ICAR 2015 dataset from https://rrc.cvc.uab.es/?ch=4&com=downloads
+
+
 synthtext_folder = os.path.dirname(os.path.abspath(__file__))+'/synthtext_folder'
 ic15_folder = os.path.dirname(os.path.abspath(__file__))+'/IC15'
 
