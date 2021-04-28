@@ -11,7 +11,7 @@ from collections import OrderedDict
 import torch.nn.init as init
 from torchutil import *
 
-from basenet import vgg16_bn
+from basenet.vgg16_bn import vgg16_bn
 
 
 class double_conv(nn.Module):
