@@ -1,5 +1,7 @@
 # CRAFT-Reimplementation
 # Note：If you have any problems, please comment. Or you can join us weChat group. The QR code will update in issues #49 .
+# 非常抱歉，一直没有继续维护这个工程，近期看到挺多人关注的，我预计11月底最晚12月出重新维护一下工程，由于当时实习期间整理工程能力不够导致工程相对较乱，这个重新维护会整理清楚。
+# 维护周期大概是两周时间，我会重新整理code以及重新训练同时上传训练的pretrain model。
 
 ## Reimplementation：Character Region Awareness for Text Detection Reimplementation based on Pytorch
 
