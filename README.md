@@ -1,6 +1,7 @@
 # CRAFT-Reimplementation
 # Note：If you have any problems, please comment. Or you can join us weChat group. The QR code will update in issues #49 .
-# 更新：重构工作已经开始，由于重构全部都是工作之外的时间，所有重构及训练周期相对较长。目前进度新的高斯图生成方式已经实验完成，对比作者论文中的图，结合以前的实验探索和向作者的提问，这次是与作者一样的方式，预计在20号左右release合成数据的训练部分。由于公司连接github较卡，暂时无法上传高斯图生成这部分。
+# 更新：重构工作已经开始，由于重构全部都是工作之外的时间，所以重构及训练周期相对较长。目前进度新的高斯图生成方式已经实验完成，对比作者论文中的图，结合以前的实验探索和向作者的提问，这次是与作者一样的方式，预计在20号左右release合成数据的训练部分。由于公司连接github较卡，暂时无法上传高斯图生成这部分。
+# 更新2：目前已经在训练合成数据全监督这部分，同时弱监督部分同时在coding及实验。如果合成数据部分训练效果达到预期，预计周五会release这部分训练code。
 
 ## Reimplementation：Character Region Awareness for Text Detection Reimplementation based on Pytorch
 
