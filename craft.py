@@ -7,12 +7,8 @@ MIT License
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from collections import OrderedDict
-import torch.nn.init as init
-from torchutil import *
 
-from basenet.vgg16_bn import vgg16_bn
-
+from basenet.vgg16_bn import vgg16_bn, init_weights
 
 class double_conv(nn.Module):
     def __init__(self, in_ch, mid_ch, out_ch):
@@ -32,14 +28,12 @@ class double_conv(nn.Module):
 
 
 class CRAFT(nn.Module):
-    def __init__(self, pretrained=True, freeze=False):
+    def __init__(self, pretrained=False, freeze=False):
         super(CRAFT, self).__init__()
 
         """ Base network """
-        # self.net = vgg16_bn(pretrained, freeze)
-        # self.net.load_state_dict(copyStateDict(torch.load('vgg16_bn-6c64b313.pth')))
-        # self.basenet = self.net
         self.basenet = vgg16_bn(pretrained, freeze)
+
         """ U network """
         self.upconv1 = double_conv(1024, 512, 256)
         self.upconv2 = double_conv(512, 256, 128)
@@ -60,7 +54,7 @@ class CRAFT(nn.Module):
         init_weights(self.upconv3.modules())
         init_weights(self.upconv4.modules())
         init_weights(self.conv_cls.modules())
-
+        
     def forward(self, x):
         """ Base network """
         sources = self.basenet(x)
@@ -83,8 +77,7 @@ class CRAFT(nn.Module):
 
         y = self.conv_cls(feature)
 
-        return y.permute(0, 2, 3, 1), feature
-
+        return y.permute(0,2,3,1), feature
 
 if __name__ == '__main__':
     model = CRAFT(pretrained=True).cuda()

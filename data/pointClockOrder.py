@@ -1,18 +1,12 @@
-import math
+import scipy.io as scio
+import os
+# import torch
+# import torch.utils.data as data
+import cv2
 import numpy as np
-
-"""
-Minimal Enclosing Parallelogram
-
-area, v1, v2, v3, v4 = mep(convex_polygon)
-
-convex_polygon - array of points. Each point is a array [x, y] (1d array of 2 elements)
-points should be presented in clockwise order.
-
-the algorithm used is described in the following paper:
-http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.53.9659&rep=rep1&type=pdf
-"""
-
+import re
+import itertools
+import math
 
 def distance(p1, p2, p):
     return abs(((p2[1] - p1[1]) * p[0] - (p2[0] - p1[0]) * p[1] + p2[0] * p1[1] - p2[1] * p1[0]) /
@@ -103,38 +97,70 @@ def mep(convex_polygon):
 
     return so, ao, bo, co, do, z1o, z2o
 
+def load_icdar2015_gt(dataFolder):
+    gt_folder_path = os.listdir(os.path.join(dataFolder, "ch4_training_localization_transcription_gt"))
+    whole_bboxes = []
+    for gt_path in gt_folder_path:
+        gt_path = os.path.join(dataFolder, "ch4_training_localization_transcription_gt/" + gt_path)
+        img_path = gt_path.replace("ch4_training_localization_transcription_gt", "icdar_c4_train_imgs").replace(".txt",".jpg").replace("gt_", "")
+        image = cv2.imread(img_path)
+        lines = open(gt_path, encoding='utf-8').readlines()
+        bboxesInfo = {'img_path':img_path, "bboxes":[], "words":[]}
+        bboxesInfo_ignore = {'img_path':img_path, "bboxes":[], "words":[]}
 
-def sort_rectangle(poly):
-    # sort the four coordinates of the polygon, points in poly should be sorted clockwise
-    # First find the lowest point
-    p_lowest = np.argmax(poly[:, 1])
-    if np.count_nonzero(poly[:, 1] == poly[p_lowest, 1]) == 2:
-        # - if the bottom line is parallel to x-axis, then p0 must be the upper-left corner
-        p0_index = np.argmin(np.sum(poly, axis=1))
-        p1_index = (p0_index + 1) % 4
-        p2_index = (p0_index + 2) % 4
-        p3_index = (p0_index + 3) % 4
-        return poly[[p0_index, p1_index, p2_index, p3_index]], 0.
-    else:
-        #- find the point that sits right to the lowest point
-        p_lowest_right = (p_lowest - 1) % 4
-        p_lowest_left = (p_lowest + 1) % 4
-        angle = np.arctan(
-            -(poly[p_lowest][1] - poly[p_lowest_right][1]) / (poly[p_lowest][0] - poly[p_lowest_right][0]))
-        # assert angle > 0
-        # if angle <= 0:
-        #     print(angle, poly[p_lowest], poly[p_lowest_right])
-        if angle / np.pi * 180 > 45:
-            #p2 - this point is p2
-            p2_index = p_lowest
-            p1_index = (p2_index - 1) % 4
-            p0_index = (p2_index - 2) % 4
-            p3_index = (p2_index + 1) % 4
-            return poly[[p0_index, p1_index, p2_index, p3_index]], -(np.pi / 2 - angle)
-        else:
-            #p3 - this point is p3
-            p3_index = p_lowest
-            p0_index = (p3_index + 1) % 4
-            p1_index = (p3_index + 2) % 4
-            p2_index = (p3_index + 3) % 4
-            return poly[[p0_index, p1_index, p2_index, p3_index]], angle
+        words = []
+        for line in lines:
+            ori_box = line.strip().encode('utf-8').decode('utf-8-sig').split(',')
+            box = [int(ori_box[j]) for j in range(8)]
+            word = ori_box[8:]
+            word = ','.join(word)
+            box = np.array(box, np.int32).reshape(4, 2)
+            if word == '###':
+                bboxesInfo_ignore["bboxes"].append(box)
+                bboxesInfo_ignore["words"].append("###")
+                # words.append('###')
+                # bboxes.append(box)
+                # area, p0, p3, p2, p1, _, _ = mep(box)
+                #
+                # bbox1 = np.array([p0, p1, p2, p3])
+                # distance1 = 10000000
+                # index = 0
+                # for i in range(4):
+                #     d = np.linalg.norm(box[0] - bbox1[i])
+                #     if distance1 > d:
+                #         index = i
+                #         distance1 = d
+                # new_box1 = []
+                # for i in range(index, index + 4):
+                #     new_box1.append(bbox1[i % 4])
+                # cv2.polylines(image, [np.array(new_box1).astype(np.int)], True, (0, 255, 255), 1)
+                continue
+            area, p0, p3, p2, p1, _, _ = mep(box)
+
+            bbox = np.array([p0, p1, p2, p3])
+            distance = 10000000
+            index = 0
+            for i in range(4):
+                d = np.linalg.norm(box[0] - bbox[i])
+                if distance > d:
+                    index = i
+                    distance = d
+            new_box = []
+            for i in range(index, index + 4):
+                new_box.append(bbox[i % 4])
+            cv2.polylines(image, [np.array(new_box).astype(np.int)], True, (0, 0, 255), 1)
+            bboxesInfo["bboxes"].append(np.array(new_box))
+            bboxesInfo["words"].append(word)
+
+            # bboxes.append(new_box)
+            # words.append(word)
+        # cv2.namedWindow("test", cv2.WINDOW_NORMAL)
+        # cv2.imshow("test", image)
+        # cv2.waitKey(0)
+        whole_bboxes.append(bboxesInfo)
+    return whole_bboxes, words
+
+if __name__ == "__main__":
+    gt_path = "/home/yanhai/OCR/Text-Detection-Data/icdar2015/text_localization"
+
+    _, __ = load_icdar2015_gt(gt_path)
